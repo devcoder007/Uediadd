@@ -52,20 +52,18 @@ INSTALLED_APPS = [
     'rest_auth.registration',
 ]
 
-AUTH_USER_MODEL = 'users.CustomUser'
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_REQUIRED = True   
+# ACCOUNT_USERNAME_REQUIRED = False
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True   
-ACCOUNT_USERNAME_REQUIRED = False
+# AUTHENTICATION_BACKENDS = (
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     "django.contrib.auth.backends.ModelBackend",
 
-AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
-    "django.contrib.auth.backends.ModelBackend",
-
-    # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
-    # "users.CustomObtainAuthToken",
-)
+#     # `allauth` specific authentication methods, such as login by e-mail
+#     "allauth.account.auth_backends.AuthenticationBackend",
+#     # "users.CustomObtainAuthToken",
+# )
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -73,13 +71,15 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kampuskonnect.kk@gmail.com'
 EMAIL_HOST_PASSWORD = 'Rish@1996'
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated', )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated', )
+# }
+
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

@@ -4,8 +4,9 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
-    path('', views.UserListView.as_view()),
+    # path('', views.UserListView.as_view()),
     # path('authenticate/',views.CustomObtainAuthToken.as_view()),
-    path('login/', views.login1),
+    # path('login/', views.login1),
     # path('register/', views.UserViewSet),
+    path('register/', views.create_user)
 ]
