@@ -7,7 +7,12 @@ from . import models
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserInfo
-        fields = ('email', 'token')
+        fields = ('email','password','token','first_name','last_name','username',)
+
+class UserInfoLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserInfo
+        fields = ('email','password',)
 
 
 # class UserSerializer(serializers.ModelSerializer):

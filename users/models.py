@@ -8,10 +8,12 @@ class UserInfo(models.Model):
     first_name = models.CharField(max_length=20, unique=False)
     last_name = models.CharField(max_length=20, unique=False)
     username = models.CharField(max_length=20, unique=False)
+    password = models.CharField(max_length=50, unique=False)
     email = models.EmailField(unique=True)
     token = models.CharField(max_length=40, unique=True)
     user_type = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
     profile_pic = models.ImageField(upload_to = 'pro_pic', default = 'pic_folder/None/no-img.jpg')
     created_at = models.DateTimeField(auto_now_add=True) 
     uuid = models.UUIDField(default=uuid.uuid4, editable=False,

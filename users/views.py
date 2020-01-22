@@ -83,26 +83,65 @@
 
 
 from rest_framework.decorators import api_view
-from .serializers import UserInfoSerializer
+from django.http import HttpResponse
+from .serializers import UserInfoSerializer, UserInfoLoginSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from.models import UserInfo
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.template.loader import render_to_string
+import uuid
+
 
 @api_view(['GET', 'POST', 'PUT'])
 def create_user(request):
     if request.method == 'POST':
+        request.data['token'] = int(uuid.uuid4())
         serializer = UserInfoSerializer(data=request.data)
-        # print(serializer.initial_data)
-        print("effgew")
-        try:
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e,"dfdgdgdf")
+        if UserInfo.objects.filter(email = request.data['email']).exists():
+            return Response({"alert":"Email Already Exists","status": 409})
+        if serializer.is_valid():
+            email(request)
+            serializer.save()
+            return Response({'token':serializer.data['token'],'status':200,'message':'User added successfully'}, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'GET':
         queryset = UserInfo.objects.all()
-        serializer = UserInfoSerializer(queryset, many=True)
-        return Response(serializer.data)
+        print(request.data)
+        if UserInfo.objects.filter(email = request.data['email']).exists():
+            queryset = UserInfo.objects.filter(email=request.data['email'])
+            if(queryset.values('password')[0]['password'] == request.data['password']):
+                serializer = UserInfoSerializer(queryset.values(), many=True)
+                if(queryset.values('is_verified')[0]['is_verified'] == False):
+                    return Response({"alert":"Email verification pending","status":404})
+                else:
+                    return Response({"data":serializer.data,"status":200})
+            else:
+                return Response({"alert":"Incorrect password","status":403})
+        else:
+            return Response({"alert":"Email is not registered yet","status":403})
+        return Response({"error":"Invalid Request","status":404})
+
+
+def email(request):
+    queryset = UserInfo.objects.filter(email = request.data['email'])
+    text_content = 'Account Activation Email'
+    subject = 'Email Activation'
+    template_name = "email.html"
+    context = {
+        'token': request.data['token']
+    }
+    from_email = 'kampuskonnect.kk@gmail.com'
+    recipients = [request.data['email']]
+    html_content = render_to_string(template_name, context)
+    email = EmailMultiAlternatives(subject, text_content, from_email, recipients)
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
+
+def mail_view(request,token):
+    UserInfo.objects.filter(token=token).update(is_verified=True)
+    return HttpResponse("Email Successfully Verified")

@@ -8,5 +8,6 @@ urlpatterns = [
     # path('authenticate/',views.CustomObtainAuthToken.as_view()),
     # path('login/', views.login1),
     # path('register/', views.UserViewSet),
-    path('register/', views.create_user)
+    path('register/', views.create_user),
+    path('verify/<slug:token>', views.mail_view, name="mail_view")
 ]
