@@ -84,7 +84,7 @@
 
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
-from .serializers import UserInfoSerializer, UserInfoLoginSerializer
+from .serializers import UserInfoSerializer, UserInfoLoginSerializer, UserInfoViewSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from.models import UserInfo
@@ -108,7 +108,10 @@ def create_user(request):
             return Response({'token':serializer.data['token'],'status':200,'message':'User added successfully'}, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.method == 'GET':
+@api_view(['GET', 'POST', 'PUT'])
+def login_user(request):
+
+    if request.method == 'POST':
         queryset = UserInfo.objects.all()
         print(request.data)
         if UserInfo.objects.filter(email = request.data['email']).exists():
@@ -124,6 +127,14 @@ def create_user(request):
         else:
             return Response({"alert":"Email is not registered yet","status":403})
         return Response({"error":"Invalid Request","status":404})
+
+@api_view(['GET', 'POST', 'PUT'])
+def user_view(request):
+    if request.method == 'GET':
+        queryset = UserInfo.objects.filter(is_deleted=False)
+        serializer = UserInfoViewSerializer(queryset.values(), many=True)
+        return Response(serializer.data)
+    return Response({'error':'Please use GET method'})
 
 
 def email(request):

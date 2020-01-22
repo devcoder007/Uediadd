@@ -15,7 +15,8 @@ class UserInfo(models.Model):
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) 
     profile_pic = models.ImageField(upload_to = 'pro_pic', default = 'pic_folder/None/no-img.jpg')
-    created_at = models.DateTimeField(auto_now_add=True) 
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False,
     )
 

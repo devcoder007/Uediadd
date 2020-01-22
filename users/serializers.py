@@ -14,6 +14,11 @@ class UserInfoLoginSerializer(serializers.ModelSerializer):
         model = models.UserInfo
         fields = ('email','password',)
 
+class UserInfoViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserInfo
+        fields = ('email','first_name','last_name','username','is_verified','user_type','created_at')
+
 
 # class UserSerializer(serializers.ModelSerializer):
 #     class Meta:
