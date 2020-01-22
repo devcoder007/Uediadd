@@ -132,7 +132,8 @@ def email(request):
     subject = 'Email Activation'
     template_name = "email.html"
     context = {
-        'token': request.data['token']
+        'token': request.data['token'],
+        'name' : request.data['username']
     }
     from_email = 'kampuskonnect.kk@gmail.com'
     recipients = [request.data['email']]
